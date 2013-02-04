@@ -1,0 +1,25 @@
+Nuevo estudiante
+ - Registro web de nuevo. 3 registros en Adm.Empresas. Lino Paredes(CI 3307216), Ivan Mujica (CI 1234567), Maria de los Angeles Garitano Zabala Burgaleta (987654321) 
+   - Errores en Login: 
+	sin datos, OK	
+	datos largos, OK
+	numeros en nombres, OK
+	letras en ci, OK
+	carrera no habilitada OK
+   - form 01: 
+	sin datos, OK
+	datos largos, OK
+	numeros en nombres, OK
+	letras en ci, OK
+	
+   - impresion de form01. datos correctos y completos  OK
+   - abandono de pagina (regreso a login)  OK
+   - intento de nueva inscripcion.  OK
+   - carnet repetido  OK
+
+ - matriculacion de registro web
+   - confirmacion del registro 1 sin modificacion
+   - impresion de matricula
+   - confirmacion de registro 2 con modificaciones
+   - impresion de matricula
+

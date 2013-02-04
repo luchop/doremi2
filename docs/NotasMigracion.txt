@@ -1,0 +1,87 @@
+Tabla 'persona'
+------------------
+Campo TipoId: 
+ P : pasaporte
+ C : cedula de identidad
+
+  `zona` tinyint(4) DEFAULT '-1',                 ./ -- sumar 1 antes de exportar
+
+Campo EstadoCivil
+ 0 : Soltero(a)
+ 1 : Casado(a)
+ 2 : Conviviente
+ 3 : Divorciado(a)
+ 4 : Viudo(a)
+
+Campo Vivienda ('La vivienda que habita es...')
+ 0 : Propia
+ 1 : Alquilada
+ 2 : Prestada
+ 3 : Anticrético
+ 4 : Adjudicada
+
+Campo Caracteristicas ('Caracteristicas de la vivienda')
+ 0 : Casa
+ 1 : Departamento
+ 2 : Habitación
+ 3 : Residencial
+ 4 : Internado
+ 5 : Otro
+
+Campo Trabaja ('¿Trabaja?')
+0 : No
+1 : Eventual
+2 : Si
+
+Campo Trabajo ('Trabaja como...')
+ 0 : Empleado
+ 1 : Obrero
+ 2 : Cuenta Propia
+ 3 : Patrón o Empleador
+ 4 : Otro
+
+Campo Jornada ('Jornada laboral')
+ 0 : Tiempo horario
+ 1 : Medio tiempo
+ 2 : Tiempo completo
+
+ 
+Tabla 'estudiante'
+------------------
+
+Campo DocIngreso ('Documento de ingreso')
+ 0 : Certificado aprobación pre-universitario
+ 1 : Certificado de notas
+ 2 : Fotocopia Certificado de egreso
+ 3 : Fotocopia legalizada título
+
+Departamentos
+ 1 : LP
+ 2 : OR
+ 3 : PT
+ 4 : CO
+ 5 : CH
+ 6 : TA
+ 7 : SC
+ 8 : BE
+ 9 : PA
+
+Campo Tipo (de colegio)
+ 0 : Público
+ 1 : Privado
+ 2 : Cema
+ 3 : Otro
+ 
+Campos de categoria
+ E : Egresado
+ P : Profesional
+ T : Traspaso
+ M : Plan magisterio
+ 
+Campos de requisitos (* en tablas requisito y estudiante_requisito)
+ 1 : Titulo de bachiller
+ 2 : Fotocopia de CI
+ 3 : Certificado de nacimiento
+ 4 : Fotografias
+ 
+ 

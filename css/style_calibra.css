@@ -1,0 +1,24 @@
+.draggable{
+	cursor:pointer;
+	font-weight:bold;
+}
+#anverso{
+	background: url("../imagenes/anverso.jpg") no-repeat;
+    border:1px solid #000;
+}
+#reverso{
+	background: url("../imagenes/reverso.jpg") no-repeat;
+    border:1px solid #000;
+}
+#reverso,#anverso{
+	border:1px solid #000;
+	width:500px;
+}
+.bloque{
+    float:left;
+    display:inline-block;
+    border:1px solid #000;
+}
+#sub_container{
+    width:1100px;
+}

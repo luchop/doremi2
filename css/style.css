@@ -1,0 +1,283 @@
+/*************************************
+   WELCOME TO THE CUSTOM STYLESHEET
+--------------------------------------
+              style.css
+        BlueTrip CSS Framework
+    Put your custom styles in here.
+***************************************/
+
+/**************************************/
+/*           COLOR SCHEME             */
+/**************************************
+- black		#000
+- white		#fff
+-           #
+-           #
+-           #
+***************************************/
+
+
+/**************************************/
+/*              GLOBALS               */
+/**************************************/
+body{
+    background-image:url(../imagenes/diagonal.png);
+    
+}
+
+.tablaseleccion {
+    font-family: "Lucida Sans Unicode", Sans-Serif;
+    font-size: 11px;
+    width: 700px;
+    text-align: left;
+}
+.tablaseleccion th {
+    font-size: 13px;
+    font-weight: normal;
+    padding: 8px;
+    /*background: #FFC268;*/
+    background: #A7AADD;
+    border-top: 2px solid #24618E;    
+    border-bottom: 1px solid #fff;
+    color: #039;
+}
+.tablaseleccion td {
+    padding: 8px 8px 1px 8px;
+    /*background: #FCFDD1;*/
+    background:#E9ECFF;
+    border-bottom: 2px solid #fff;
+    color: #669;
+    border-top: 1px solid transparent;
+	height: 1em;
+}
+
+a.actualiza, a.elimina, a.adiciona, a.vista, a.descarga {
+	font-size: 8pt;
+	color:#900;
+	font-weight:bold;
+	padding-left:18px;
+	text-decoration: none;
+}
+
+a.actualiza {
+	background:url(../imagenes/update.png) left center no-repeat;
+}
+a.descarga {
+	background:url(../imagenes/descarga.png) left center no-repeat;
+}
+a.elimina {
+	background:url(../imagenes/delete.png) left center no-repeat;
+}
+a.adiciona {
+	background:url(../imagenes/add.png) left center no-repeat;
+}
+a.vista {
+	background:url(../imagenes/view.png) left center no-repeat;
+}
+
+#errorContainer,#errorContainer2{
+    border: 1px solid;
+    margin: 5px 15px 10px 5px;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12px;
+    font-weight: bold;
+    text-align:left;
+    width:auto;
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url('../imagenes/error.png');    
+    display:none;
+}
+
+#errorContainer li,#errorContainer2 li{
+    padding: 0px 0px 0px 0px;
+    background-color: transparent;
+    margin-bottom: 0px;
+    border:none;
+    color: #D8000C;
+    list-style: none;
+}
+ #errorContainer li[value=""]{
+    display: hide;
+}
+
+/**************************************/
+/*              HEADER                */
+/**************************************/
+#cabecera{
+    /*background-image: url(../imagenes/banner.png);*/
+    height: 120px;
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+}
+#cabecera hr {
+    background-color: #fff;
+    color: #001b3c;
+    height: 3px;
+}
+#cabecera h1{
+    color:#fff;
+    text-transform: uppercase;
+    text-align: center;
+    font-family: monaco, "Lucida Console", courier, monospace;
+}
+#titulou{
+    height: 119px;
+    width: 100%;
+    background-image: url(../imagenes/banner.png);
+    
+    background-repeat: no-repeat;
+    background-position:  right;
+    border: 1px solid transparent;
+    z-index: 100;
+
+}
+#logos{
+    height: 100px;
+    width: 28%;
+}
+#upea{
+    background-image: url(../imagenes/upeaex.png);
+    background-repeat: no-repeat;
+    background-position: 0% bottom;
+    background-position-x: 0px;
+    margin-left: 40px;
+    width: 40%;
+    height: 470px;
+    float: left;
+}
+#login{
+    width: 48%;
+    height: 200px;
+	float:right;
+	/*margin:auto;*/
+    vertical-align: bottom;
+}
+
+
+label{
+    font-weight: bold;
+    float: left;
+    width: 135px;
+}
+
+
+/**************************************/
+/*             NAVIGATION             */
+/**************************************/
+
+#vista_nula{
+    height: 570px;
+
+
+}
+
+/**************************************/
+/*            MAIN CONTENT            */
+/**************************************/
+form fieldset{
+    border:1px solid #888;
+    
+    padding:0px 0px 10px 10px;
+    -moz-border-radius:10px;-webkit-border-radius: 10px;border-radius:10px;    
+}
+form fieldset legend {
+	margin:0px 0px 0px 0px;
+	 border:1px solid #888;padding:3px 3px;
+
+	  background:#eee ;
+	  -moz-border-radius:5px;-webkit-border-radius: 5px;
+	  border-radius:5px;text-transform:uppercase;
+	  letter-spacing:1px;
+	  display: block;
+	  font-weight: bold; font-size:1em;
+}
+
+input,select,textarea{               
+    height: 20px;
+    color:#555555;
+    border:1px solid #cccccc;    
+	-webkit-border-radius:1px;-moz-border-radius:1px;border-radius:1px;
+}
+
+input:focus,select:focus,textarea:focus{
+    border-color:rgba(82, 168, 236, 0.8);
+    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);outline:0;outline:thin dotted \9;}
+
+#formulario div.error2{border:none;background-color: transparent;display: inline;}
+#formulario div.error2>label{color:#b94a48; border: none; }
+#formulario div.error2 input,#formulario div.error2 select,#formulario div.error2 textarea{color:#b94a48;border-color:#b94a48;}
+#formulario div.error2 input:focus,#formulario div.error2 select:focus,#formulario div.error2 textarea:focus{border-color:#953b39;-webkit-box-shadow:0 0 6px #d59392;-moz-box-shadow:0 0 6px #d59392;box-shadow:0 0 6px #d59392;}
+
+#formulario div.success2{border:none;background-color: transparent;}
+#formulario div.success2>label{color:#468847;border: none;margin: 0px 0px 0px 0px;}
+#formulario div.success2 input,#formulario div.success2 select,#formulario div.success2 textarea{color:#468847;border-color:#468847;}
+#formulario div.success2 input:focus,#formulario div.success2 select:focus,#formulario div.success2 textarea:focus{
+    border-color:#356635;-webkit-box-shadow:0 0 6px #7aba7b;-moz-box-shadow:0 0 6px #7aba7b;box-shadow:0 0 6px #7aba7b;}
+
+/*
+label.error {
+    font-weight: bold;
+    font-size: 10px;
+    color: blue;
+    width: 200px;
+    height: 10px;
+    border: 1px saddlebrown solid;
+    background-color: transparent;
+    margin: 0px 0px 0px 0px;
+    
+}*/
+
+
+.buttonok{
+  margin: auto;
+  
+  padding:0px 0px 0px 20px;   /*** Links ***/
+  
+  border:1px solid #dedede;
+  border-top:1px solid #eee;
+  border-left:1px solid #eee;
+  
+  font-family:"Liberation Sans", Helvetica, Arial, sans-serif;
+  font-size:100%;
+  text-decoration:none;
+  font-weight:bold;
+  color:#565656;
+  cursor:pointer;
+  height: 30px;
+  background: url(images/icons/tick.png) left 5px center;
+  background-color:#f5f5f5;
+  line-height:130%;
+  background-repeat: no-repeat;
+  /*min-width: 150px;*/
+  text-align: center;
+  
+  
+  
+  
+}
+.buttonok:hover { background-color:#E6EFC2; border:1px solid #C6D880; color:#529214; }
+ .buttonok:active { background-color:#529214; border:1px solid #529214; color:#fff; }
+/**************************************/
+/*               FOOTER               */
+/**************************************/
+#pie{
+    
+    background-image: url(../imagenes/pie.png);
+    
+    color:#fff;
+    font-family: monaco, "Lucida Console", courier, monospace;
+    font-weight: bold;
+    
+    vertical-align: middle;
+    height: 86px;
+}
+#pie hr{
+    background-color: transparent;
+    height: 3px;
+}
