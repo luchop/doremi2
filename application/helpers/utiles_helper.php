@@ -39,7 +39,14 @@
                 return date('d/m/Y', $Fecha);
         }
     }
-	
+    
+    function FechaHoraLiteral($Fecha, $Formato=2) {
+        $FechaPHP = strtotime( $Fecha );
+        $Hora = date( 'H:i', $FechaPHP );
+        $Fecha = FechaLiteral($Fecha, $Formato);
+        return $Fecha.' '.$Hora;
+    }
+    
 	//recibe la fecha en formato dd/mm/aaaa o dd-mm-aaaa
     //y convierte a aaaa-mm-dd
     function FechaParaMySQL($Fecha) {

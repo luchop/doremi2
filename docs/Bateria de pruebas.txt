@@ -18,7 +18,8 @@ Nuevo estudiante
    - carnet repetido  OK
 
  - matriculacion de registro web
-   - confirmacion del registro 1 sin modificacion
+   - confirmacion del registro 1 sin modificacion  OK
+   - Nueva matriculacion de reg. 1 (debe ser para carrera paralela)
    - impresion de matricula
    - confirmacion de registro 2 con modificaciones
    - impresion de matricula

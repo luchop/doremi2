@@ -125,30 +125,43 @@ class Modelo_estudiante extends CI_Model {
 	}
 
 	//recupera datos de anteriores matriculaciones
-	function DatosMatriculacion($CodPersona, &$AnioIngreso, &$Matricula, &$RegUniversitario, &$Anexo,
+	function DatosMatriculacion($CodPersona, &$AnioIngreso, &$RegUniversitario, &$Anexo,
 								 &$NumArchivo, &$AnioEgreso, &$CodCarrera, &$CodCarreraOrigen, 
-								 &$CodCambio1, &$CodCambio2, &$Deposito) {
+								 &$CodCambio1, &$CodCambio2) {
 		$sql = "SELECT RegUniversitario, Anexo FROM estudiante WHERE CodPersona=$CodPersona";
 		$query = $this->db->query($sql);
 		$RegUniversitario = $query->row()->RegUniversitario;
 		$Anexo = $query->row()->Anexo;
 		//determina carrera actual y anteriores
 		$this->CarrerasEstudiante($CodPersona, $CodCarrera, $NumArchivo, $CodCarreraOrigen, $AnioIngreso, $AnioEgreso, $CodCambio1, $CodCambio2);
-		$Matricula = $this->UltimaMatriculaExpedida() + 1;
-
-		//importe de la matricula depende de la nacionalidad
-		if( $this->modelo_persona->EsNacional($CodPersona) ) 
-			$Deposito = $this->modelo_valores->GetNumero('MATRICULANACIONAL');
-		else
-			$Deposito = $this->modelo_valores->GetNumero('MATRICULAEXTRANJERO');
 	}
+    
+    //datos de la carrera en que aun no se ha matriculado
+    function DatosMatriculacionParalela($CodPersona, &$AnioIngreso, &$RegUniversitario, &$Anexo,
+                                        &$NumArchivo, &$AnioEgreso, &$CodCarrera, &$CodCarreraOrigen, 
+                                        &$CodCambio1, &$CodCambio2) {
+        $sql = "SELECT RegUniversitario, Anexo FROM estudiante WHERE CodPersona=$CodPersona";
+		$query = $this->db->query($sql);
+		$RegUniversitario = $query->row()->RegUniversitario;
+		$Anexo = $query->row()->Anexo;
+        //determina carrera actual y anteriores
+		$this->CarrerasEstudiante($CodPersona, $CodCarrera, $NumArchivo, $CodCarreraOrigen, $AnioIngreso, $AnioEgreso, $CodCambio1, $CodCambio2);
+        
+        $sql = "SELECT CodCarrera FROM estudiante_carrera LEFT OUTER JOIN matricula
+                ON estudiante_carrera.CodEstudianteCarrera=matricula.CodEstudianteCarrera
+                AND Gestion=".$this->session->userdata('Gestion')." WHERE CodPersona=$CodPersona
+                AND CodMatricula IS NULL";
+        $query = $this->db->query($sql);
+		$NumArchivo = $query->row()->NumArchivo;
+		$AnioIngreso = $query->row()->AnioIngreso;
+		$AnioEgreso = $query->row()->AnioEgreso;
+    }
 	
 	//genera datos para nuevo universitario
-	function DatosNuevaMatriculacion($CodPersona, &$AnioIngreso, &$Matricula, &$RegUniversitario, &$Anexo,
+	function DatosNuevaMatriculacion($CodPersona, &$AnioIngreso, &$RegUniversitario, &$Anexo,
 								 &$NumArchivo, &$AnioEgreso, &$CodCarrera, &$CodCarreraOrigen, 
-								 &$CodCambio1, &$CodCambio2, &$Deposito) {
+								 &$CodCambio1, &$CodCambio2) {
 		$AnioIngreso = date("Y");
-		$Matricula = $this->UltimaMatriculaExpedida() + 1;
 		$RegUniversitario = $this->UltimoRegUniversitario() + 1;
 		$Anexo = "";
 		$AnioEgreso = "";
@@ -157,12 +170,6 @@ class Modelo_estudiante extends CI_Model {
         $CodCarreraOrigen = 0;
 		$CodCambio1 = 0;
 		$CodCambio2 = 0;
-		
-		//importe de la matricula depende de la nacionalidad
-		if( $this->modelo_persona->EsNacional($CodPersona) ) 
-			$Deposito = $this->modelo_valores->GetNumero('MATRICULANACIONAL')/100;
-		else
-			$Deposito = $this->modelo_valores->GetNumero('MATRICULAEXTRANJERO')/100;
 	}
 	
 	//busca matriculados

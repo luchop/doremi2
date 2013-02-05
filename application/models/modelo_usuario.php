@@ -24,8 +24,9 @@ class Modelo_usuario extends CI_Model {
         
         function CambiaClave($CodUsuario, $NuevaClave) {
             $sql = "UPDATE usuario SET Clave='$NuevaClave' WHERE CodUsuario='$CodUsuario' and Activo in ('S')";
-            return $this->db->query($sql);
-            //echo $sql;
+            $this->db->query($sql);
+            
+            $this->modelo_auditoria->Insert(0, $sql);
         }
 	function ComboUsuarios($Tipos) {
 		$sql = "SELECT persona.CodPersona, CONCAT_WS(' ',persona.Nombres, persona.Paterno, persona.Materno) AS NombreCompleto, usuario.NombreUsuario
@@ -43,6 +44,7 @@ class Modelo_usuario extends CI_Model {
 		$sql = "INSERT INTO cupo_matricula (CodPersona, Gestion, Fecha, Desde, Hasta) VALUES(
 		       $CodPersona, '$Gestion', '$Fecha', $Desde, $Hasta)";
 		$this->db->query($sql);
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
 	}
 	
     function InsertPersona($Paterno, $Materno, $Nombres, $Telefono,$Celular,$Correo) {
@@ -52,7 +54,8 @@ class Modelo_usuario extends CI_Model {
 				$this->modelo_valores->GetNumero('CODIGOPAIS').
 				",'','','$Telefono','$Celular','$Correo','','')";
         
-        return $this->db->query($sql);
+        $this->db->query($sql);
+        $this->modelo_auditoria->Insert(0, $sql);
     }
 	
     function Insert($NombreUsuario, $Clave, $TipoUsuario) {
@@ -60,19 +63,23 @@ class Modelo_usuario extends CI_Model {
         $sql = "INSERT INTO usuario (CodPersona, NombreUsuario, Clave,CodPerfil,Activo) VALUES 
 		        (LAST_INSERT_ID(), '$NombreUsuario', '$Clave', '$TipoUsuario','$Activo')";
         
-        return $this->db->query($sql);
+        $this->db->query($sql);
+        $this->modelo_auditoria->Insert(0, $sql);
     }
     function InsertUsuarioCarrera($CodUsuario, $CodCarrera) {
         $sql = "INSERT INTO usuario_carrera (CodUsuario, CodCarrera) VALUES ($CodUsuario,$CodCarrera)";
-        return $this->db->query($sql);
+        $this->db->query($sql);
+        $this->modelo_auditoria->Insert(0, $sql);
     }
     function DeleteUsuarioCarrera($CodUsuarioCarrera) {
         $sql = "DELETE FROM usuario_carrera WHERE CodUsuarioCarrera=$CodUsuarioCarrera";
-        return $this->db->query($sql);
+        $this->db->query($sql);
+        $this->modelo_auditoria->Insert(0, $sql);
     }
     function DeleteAllUsuarioCarrera($CodUsuario) {
         $sql = "DELETE FROM usuario_carrera WHERE CodUsuario=$CodUsuario";
-        return $this->db->query($sql);
+        $this->db->query($sql);
+        $this->modelo_auditoria->Insert(0, $sql);
     }
     function GetUsuarioCarrera($CodUsuario) {
         $sql = "SELECT * FROM  usuario_carrera uc, carrera c 
@@ -80,21 +87,19 @@ class Modelo_usuario extends CI_Model {
 
         return $this->db->query($sql);
     }
-    
-    
-    
 	
     function UpdatePersona($CodPersona,$Paterno, $Materno, $Nombres, $Telefono,$Celular,$Correo) {
         $sql = "UPDATE persona set Paterno='$Paterno',Materno='$Materno',Nombres='$Nombres',Telefono='$Telefono',Celular='$Celular',Correo='$Correo'
                 WHERE CodPersona='$CodPersona'";
      
-        $this->Auditoria->Insert($this->session->userdata('CodUsuario'), $CodPersona, "U", $sql);
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
         return $this->db->query($sql);
     }
 
     function Update($CodUsuario, $CodPersona, $NombreUsuario, $Clave, $TipoUsuario) {
         $sql = "UPDATE $this->Tabla SET  NombreUsuario='$NombreUsuario',Clave='$Clave',CodPerfil='$TipoUsuario'
                 WHERE CodUsuario=$CodUsuario and CodPersona='$CodPersona'";
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
         return $this->db->query($sql);
     }
 

@@ -10,15 +10,17 @@ class Modelo_perfil extends CI_Model {
     }
     
     function Insert($Perfil, $Llave) {
-        
         $sql = "INSERT INTO perfil (Perfil,Administrador,Llave) VALUES ('$Perfil', 'N', '$Llave')";
-        return $this->db->query($sql);
+        $this->db->query($sql);
+        
+        $this->modelo_auditoria->Insert(0, $sql);
     }
 
     function Update($CodPerfil, $Perfil,$Llave) {
         $sql = "UPDATE perfil SET Perfil='$Perfil', Llave='$Llave'
                 WHERE CodPerfil=$CodPerfil";
-        return $this->db->query($sql);
+        $this->db->query($sql);
+        $this->modelo_auditoria->Insert(0, $sql);
     }
 
     function Disable($CodPerfil) {

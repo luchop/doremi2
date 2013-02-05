@@ -15,24 +15,19 @@ class Auditoria extends CI_Controller {
         $this->load->view('vista_maestra', $data);
     }
     
-    function Listado() {
-        $tabla="<table><tr><td>Fecha</td><td>Cambio</td></tr>";
-        $CodPersona=0;
-        if($this->auditoria->BusquedaPersona($_POST["Ci"],$_POST["Apellido"],$_POST["Registro"])) {
-            $registro = $this->auditoria->BusquedaPersona($_POST["Ci"],$_POST["Apellido"],$_POST["Registro"]);
-            $CodPersona=$registro->CodPersona;
-        }
+    function Listado($CodPersona) {
+        $this->table->set_empty("&nbsp;");
+        $this->table->set_heading('Fecha', 'Operaci&oacute;n efectuada');
+        $aux = array('table_open' => '<table class="tablaseleccion">');
+        $this->table->set_template($aux);
         
-        
-        $registros = $this->auditoria->GetAllXCodPersona($CodPersona);
-        foreach ($registros->result() as $registro)
-        {
-            $tabla.="<tr>
-                <td>".$registro->Fecha."</td><td>".$registro->Consulta."</td>
-                </tr>";
-        }
-        $tabla.="</tabla>";
-        echo $tabla;
+        $registros = $this->modelo_auditoria->GetAllXCodPersona($CodPersona);
+        foreach ($registros->result() as $registro) 
+            $this->table->add_row(FechaHoraLiteral($registro->Fecha), $registro->Consulta);
+        $data['VistaMenu'] = $this->Menu;
+        $data['Tabla'] = $this->table->generate();
+		$data['VistaPrincipal'] = 'vista_auditoria';
+        $this->load->view('vista_maestra', $data);
     }
     
     function BuscaParaAuditoria() {
@@ -48,10 +43,9 @@ class Auditoria extends CI_Controller {
                 $data['VistaPrincipal'] = 'vista_mensaje';            
                 $this->load->view('vista_maestra', $data);
             } else if ($registros->num_rows() == 1) {            //solo un registro encontrado                
-				redirect("/formulario/Editar/".$registros->row()->CodPersona."/0", 'refresh');
+                $this->Listado($registros->row()->CodPersona);
             } else {                                             // varios registros encontrados: muestra lista
                 //genera tabla
-                $this->load->library('table');
                 $this->table->set_empty("&nbsp;");
                 $this->table->set_heading('No.', 'Nombre del estudiante', 'Carrera', 'Acci&oacute;n');
                 $aux = array('table_open' => '<table class="tablaseleccion">');
@@ -59,17 +53,21 @@ class Auditoria extends CI_Controller {
                 $i = 0;
                 foreach ($registros->result() as $registro)
                     $this->table->add_row(++$i, $registro->NombreCompleto, $registro->NombreCarrera,
-                            anchor("estudiante/CargaVista/$registro->CodPersona/0", 
-                                  ($Modificacion==1? ' Modificar ':' Ver '), 
-                                  array('class'=>($Modificacion==1? ' actualiza':'vista'))));
+                            anchor("auditoria/CargaVista/$registro->CodPersona", 
+                                  ' Auditoria ', array('class'=>'vista')));
                 $data['Tabla'] = $this->table->generate();
                 $data['VistaPrincipal'] = 'vista_lista_estudiantes';
                 $this->load->view('vista_maestra', $data);
             }
         } else {
-            $data['VistaPrincipal'] = 'vista_auditoria';
+            $data['VistaPrincipal'] = 'vista_busca_auditoria';
             $this->load->view('vista_maestra', $data);
         }
     }
+    
+  	function CargaVista($CodPersona) {
+        redirect("/auditoria/Listado/$CodPersona", 'refresh');
+    }
+
 }
 ?>

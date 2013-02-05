@@ -17,21 +17,28 @@ class Modelo_formulario extends CI_Model {
                              '$EstadoCivil', '$Domicilio', '$Telefono', '$Celular', '$Correo', '$TelUrgencia', '$Obs', NOW() ) ";
 
         $this->db->query($consulta);
-        return $this->db->query("select LAST_INSERT_ID() as Codigo;")->row()->Codigo;
+        $CodPersona = $this->db->query("select LAST_INSERT_ID() as Codigo;")->row()->Codigo;
+        $this->modelo_auditoria->Insert($CodPersona, $consulta);
+        return $CodPersona;
     }
     
     function InsertPreuniversitario($CodPersona, $CodUniversidad, $Colegio, $AnioEgreso, $TipoColegio, $NumTitulo, $AnioTitulo, $Localidad,$CodPais,$CodCarrera,$CodSubsede) {
         if($CodSubsede=='')   $CodSubsede2='null' ;        else $CodSubsede2=$CodSubsede;
         $consulta = "INSERT INTO preuniversitario (CodPersona, CodUniversidad, Colegio, AnioEgreso, TipoColegio, NumTitulo, AnioTitulo, Localidad,CodPais,CodCarrera,CodSubsede) ";
         $consulta.= "VALUES ('$CodPersona', '$CodUniversidad', '$Colegio', '$AnioEgreso', '$TipoColegio', '$NumTitulo', '$AnioTitulo', '$Localidad','$CodPais','$CodCarrera',$CodSubsede2) ";
-		return $this->db->query($consulta);        
+		$query = $this->db->query($consulta);
+        $this->modelo_auditoria->Insert($CodPersona, $consulta);
+        return $query;
     }
 
     function UpdatePersona($CodPersona, $Paterno, $Materno, $Nombres, $Genero, $FechaNac, $LugarNac, $TipoId, $CI, $Expedido, $CodPais, $EstadoCivil, $Domicilio, $Telefono, $Celular, $Correo, $TelUrgencia, $Obs) {
         $consulta = "UPDATE persona SET ";
         $consulta.= " Paterno = '$Paterno', Materno = '$Materno', Nombres = '$Nombres', Genero = '$Genero', FechaNac = '$FechaNac', LugarNac = '$LugarNac', TipoId = '$TipoId', CI = '$CI', Expedido = '$Expedido', CodPais = '$CodPais', EstadoCivil = '$EstadoCivil', Domicilio = '$Domicilio', Telefono = '$Telefono', Celular = '$Celular', Correo = '$Correo', TelUrgencia = '$TelUrgencia', Obs = '$Obs' ";
         $consulta.= " WHERE CodPersona = '$CodPersona'  ";
-        return $this->db->query($consulta);
+        $query = $this->db->query($consulta);
+        
+        $this->modelo_auditoria->Insert($CodPersona, $consulta);
+        return $query;
     }
 
     function UpdatePreuniversitario($CodPersona, $CodUniversidad, $Colegio, $AnioEgreso, $TipoColegio, $NumTitulo, $AnioTitulo, $Localidad,$CodPais,$CodCarrera,$CodSubsede) {
@@ -40,21 +47,29 @@ class Modelo_formulario extends CI_Model {
         $consulta = "UPDATE preuniversitario SET ";
         $consulta.= " CodUniversidad = '$CodUniversidad', Colegio = '$Colegio', AnioEgreso = '$AnioEgreso', TipoColegio = '$TipoColegio', NumTitulo = '$NumTitulo', AnioTitulo = '$AnioTitulo', Localidad = '$Localidad',CodPais='$CodPais',CodCarrera='$CodCarrera',CodSubsede=$CodSubsede2";
         $consulta.= " WHERE CodPersona = '$CodPersona'  ";
-       
-        return $this->db->query($consulta);
+        $query = $this->db->query($consulta);
+        
+        $this->modelo_auditoria->Insert($CodPersona, $consulta);
+        return $query;
     }
 
     function InsertSocioeconomico($CodPersona, $CodZona, $Gestion, $Vivienda, $Caracteristicas, $Trabaja, $Trabajo, $Jornada) {
         $consulta = "INSERT INTO socio_economico (CodPersona, CodZona, Gestion, Vivienda, Caracteristicas, Trabaja, Trabajo, Jornada) ";
         $consulta.= "VALUES ('$CodPersona', '$CodZona', '$Gestion', '$Vivienda', '$Caracteristicas', '$Trabaja', '$Trabajo', '$Jornada') ";
-        return $this->db->query($consulta);
+        $query = $this->db->query($consulta);
+        
+        $this->modelo_auditoria->Insert($CodPersona, $consulta);
+        return $query;
     }
 
     function UpdateSocioeconomico($CodPersona, $CodZona, $Gestion, $Vivienda, $Caracteristicas, $Trabaja, $Trabajo, $Jornada) {
         $consulta = "UPDATE socio_economico SET ";
         $consulta.= " CodZona = '$CodZona', Gestion = '$Gestion', Vivienda = '$Vivienda', Caracteristicas = '$Caracteristicas', Trabaja = '$Trabaja', Trabajo = '$Trabajo', Jornada = '$Jornada' ";
         $consulta.= " WHERE CodPersona = '$CodPersona' ";
-        return $this->db->query($consulta);
+        $query = $this->db->query($consulta);
+        
+        $this->modelo_auditoria->Insert($CodPersona, $consulta);
+        return $query;
     }
 
     function Disable($CodUsuario) {
@@ -87,9 +102,8 @@ class Modelo_formulario extends CI_Model {
     //+++++++++++++++++++++++++esto debe ir a otro modelo de reportes++++++++++++++++++++++++++//
     function ListadoEstudiantesPorGestion($Gestion) {
         $sql = "select count(*) numero,m.gestion,c.Nombre from matricula m, estudiante_carrera ec,carrera c
-where m.CodEstudianteCarrera=ec.CodEstudianteCarrera and ec.CodCarrera=c.CodCarrera and gestion=$Gestion
-group by c.CodCarrera;";
-        
+                where m.CodEstudianteCarrera=ec.CodEstudianteCarrera and ec.CodCarrera=c.CodCarrera and gestion=$Gestion
+                group by c.CodCarrera;";        
         return $this->db->query($sql);        
     }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//

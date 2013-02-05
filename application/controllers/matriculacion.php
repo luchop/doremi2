@@ -23,16 +23,27 @@ class Matriculacion extends CI_Controller {
 	function InicializaVariables($CodPersona) {
 		$data['VistaMenu'] = $this->Menu;
 
-		if( $this->modelo_matricula->EsEstudianteNuevo($CodPersona) )
-            $this->modelo_estudiante->DatosNuevaMatriculacion($CodPersona, $AnioIngreso, $Matricula, $RegUniversitario, $Anexo,
+		//determina caso: nuevo, antiguo, carrera paralela
+        $Carreras = $this->modelo_matricula->CuentaCarreras($CodPersona);
+        if( $Carreras==0 )
+            $this->modelo_estudiante->DatosNuevaMatriculacion($CodPersona, $AnioIngreso, $RegUniversitario, $Anexo,
 															  $NumArchivo, $AnioEgreso, $CodCarrera, $CodCarreraOrigen, 
-															  $CodCambio1, $CodCambio2, $Deposito);
-		else
-			$this->modelo_estudiante->DatosMatriculacion($CodPersona, $AnioIngreso, $Matricula, $RegUniversitario, $Anexo,
+															  $CodCambio1, $CodCambio2);
+		else if( $Carreras==1 )
+			$this->modelo_estudiante->DatosMatriculacion($CodPersona, $AnioIngreso, $RegUniversitario, $Anexo,
 														 $NumArchivo, $AnioEgreso, $CodCarrera, $CodCarreraOrigen, 
-														 $CodCambio1, $CodCambio2, $Deposito);
-		$data['AnioIngreso'] = $AnioIngreso;
-		$data['Matricula'] = $Matricula;
+														 $CodCambio1, $CodCambio2);
+        else  //datos de la carrera en que aun no se ha matriculado
+            $this->modelo_estudiante->DatosMatriculacionParalela($CodPersona, $AnioIngreso, $RegUniversitario, $Anexo,
+                                                                 $NumArchivo, $AnioEgreso, $CodCarrera, $CodCarreraOrigen, 
+                                                                 $CodCambio1, $CodCambio2);
+        $data['AnioIngreso'] = $AnioIngreso;
+		$data['Matricula'] = $this->UltimaMatriculaExpedida() + 1;
+        //importe de la matricula depende de la nacionalidad
+		if( $this->modelo_persona->EsNacional($CodPersona) ) 
+			$data['Deposito'] = number_format( $this->modelo_valores->GetNumero('MATRICULANACIONAL')/100, 2);
+		else
+			$data['Deposito'] = number_format( $this->modelo_valores->GetNumero('MATRICULAEXTRANJERO')/100, 2);
 		$data['RegUniversitario'] = $RegUniversitario;
 		$data['Anexo'] = $Anexo==0? '': $Anexo;
 		$data['NumArchivo'] = $NumArchivo;
@@ -41,7 +52,6 @@ class Matriculacion extends CI_Controller {
 		$data['CodCarreraOrigen'] = $CodCarreraOrigen;
 		$data['CodCambio1'] = $CodCambio1;
 		$data['CodCambio2'] = $CodCambio2;
-		$data['Deposito'] = number_format($Deposito, 2);
 		$data['Fecha'] = date('d/m/Y');
 		$data['NumDeposito'] = '';
 		

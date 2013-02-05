@@ -8,6 +8,16 @@ class Modelo_matricula extends CI_Model {
         parent::__construct();
     }
     
+    //determina caso: nuevo, antiguo, carrera paralela
+    function DeterminaCategoria($CodPersona, $Gestion) {
+        if( $this->EsEstudianteNuevo($CodPersona) ) 
+            return 'nuevo';
+        else if( $this->CarreraParalela($CodPersona) )
+            return 'paralela';
+        else
+            return 'antiguo';
+    }
+    
     function GeneraNumArchivo($CodCarrera, $Gestion) {
         $sql = "SELECT IFNULL(MAX(CAST(estudiante_carrera.NumArchivo AS UNSIGNED)),0) AS Mayor
                 FROM estudiante_carrera, matricula 
@@ -76,19 +86,26 @@ class Modelo_matricula extends CI_Model {
 		$sql = "INSERT INTO estudiante_carrera (CodPersona, CodCarrera, AnioIngreso, AnioEgreso, NumArchivo) 
                 VALUES ($CodPersona, $CodCarrera, '$AnioIngreso', '$AnioEgreso', '$NumArchivo')";
         $this->db->query($sql);
-		$sql = "SELECT LAST_INSERT_ID() AS Codigo";
-		return $this->db->query($sql)->row()->Codigo;
+		$sql2 = "SELECT LAST_INSERT_ID() AS Codigo";
+		$Codigo = $this->db->query($sql2)->row()->Codigo;
+        
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
+        return $Codigo;
 	}
 	
 	function InsertEstudiante($CodPersona, $RegUniversitario, $Anexo, $DocIngreso, $Categoria) {
 		$sql = "INSERT INTO estudiante (CodPersona, RegUniversitario, Anexo, DocIngreso, Categoria) 
                 VALUES ($CodPersona, $RegUniversitario, $Anexo, $DocIngreso, '$Categoria')";
         $this->db->query($sql);
+        
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
 	}
 	
 	function DeleteRequisitos($CodPersona) {
     	$sql = "DELETE FROM estudiante_requisito WHERE CodPersona=$CodPersona";
         $this->db->query($sql);
+        
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
     }
     
     function InsertRequisitos($CodPersona, $Requisito, $Fecha) {
@@ -96,6 +113,7 @@ class Modelo_matricula extends CI_Model {
 			$sql = "INSERT INTO estudiante_requisito (CodPersona, CodRequisito, FechaPresentacion) VALUES(
 			       $CodPersona, $r, '$Fecha')";
 			$this->db->query($sql);
+            $this->modelo_auditoria->Insert($CodPersona, $sql);
 		}
 	}
 	
@@ -103,14 +121,19 @@ class Modelo_matricula extends CI_Model {
 		$sql = "INSERT INTO matricula (CodEstudianteCarrera, Matricula, Fecha, Gestion) 
                 VALUES ($CodEstudianteCarrera, $Matricula, '$Fecha', '$Gestion')";
         $this->db->query($sql);
-		$sql = "SELECT LAST_INSERT_ID() AS Codigo";
-		return $this->db->query($sql)->row()->Codigo;
+		$sql2 = "SELECT LAST_INSERT_ID() AS Codigo";
+		$Codigo = $this->db->query($sql2)->row()->Codigo;
+        
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
+        return $Codigo;
 	}
 	
 	function InsertDeposito($CodMatricula, $TipoMatricula, $CodBanco, $DepMatricula, $FechaDeposito, $NumDeposito) {
         $sql = "INSERT INTO deposito_bancario (CodMatricula, TipoMatricula, CodBanco, DepMatricula, FechaDeposito, NumDeposito) 
                 VALUES ($CodMatricula, '$TipoMatricula', $CodBanco, $DepMatricula, '$FechaDeposito', '$NumDeposito')";
         $this->db->query($sql);
+        
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
 	}
 
 	function Insert($CodPersona, $AnioIngreso, $Matricula, $RegUniversitario, $Anexo, $AnioEgreso,  
@@ -147,6 +170,8 @@ class Modelo_matricula extends CI_Model {
         $sql = "UPDATE estudiante set RegUniversitario=$RegUniversitario, Anexo=$Anexo, DocIngreso=$DocIngreso, 
                 Categoria='$Categoria' WHERE CodPersona=$CodPersona"; 
         $this->db->query($sql);
+        
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
         
         //requisitos pendiente
         $this->DeleteRequisitos($CodPersona);
@@ -198,12 +223,12 @@ class Modelo_matricula extends CI_Model {
 		return $row->Conteo>0;
 	}
 	
-	function EsEstudianteNuevo($CodPersona) {
+	function CuentaCarreras($CodPersona) {
 		$sql = "SELECT COUNT(*) AS Conteo FROM estudiante_carrera, matricula
 				WHERE estudiante_carrera.CodEstudianteCarrera= matricula.CodEstudianteCarrera
 				AND estudiante_carrera.CodPersona=$CodPersona";
 		$query = $this->db->query($sql);
-		return $query->row()->Conteo == 0;
+		return $query->row()->Conteo;
 	}
     
     function Delete($CodMatricula) {
@@ -224,10 +249,12 @@ class Modelo_matricula extends CI_Model {
         if($Conteo==1) {
             $sql = "DELETE FROM estudiante_requisito WHERE CodPersona=$CodPersona";
             $this->db->query($sql);
+            $this->modelo_auditoria->Insert($CodPersona, $sql);
         }
         
         $sql = "DELETE FROM deposito_bancario WHERE CodMatricula=$CodMatricula";
         $this->db->query($sql);
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
         
         //solo se borra si es la unica matricula en la carrera
         $sql = "SELECT COUNT(*) AS Conteo  FROM estudiante_carrera, matricula
@@ -239,22 +266,26 @@ class Modelo_matricula extends CI_Model {
         
         $sql = "DELETE FROM matricula WHERE CodMatricula=$CodMatricula";
         $this->db->query($sql);
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
         
         if( $ConteoCarreras==1 ) {
             $sql = "DELETE FROM estudiante_carrera WHERE CodPersona=$CodPersona AND CodCarrera=$CodCarrera";
             $this->db->query($sql);
+            $this->modelo_auditoria->Insert($CodPersona, $sql);
         }
         
         //solo se borra si es la unica matricula del estudiante
         if($Conteo==1) {
             $sql = "DELETE FROM estudiante WHERE CodPersona=$CodPersona";
             $this->db->query($sql);
+            $this->modelo_auditoria->Insert($CodPersona, $sql);
         }
     }
     
     function Anulacion($CodMatricula) {
         $sql = "UPDATE matricula SET Anulada='S' WHERE CodMatricula=$CodMatricula";
         $this->db->query($sql);
+        $this->modelo_auditoria->Insert($CodPersona, $sql);
     }
 	
 	function TablaMatriculados($CodCarrera, $Gestion) {

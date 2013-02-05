@@ -34,7 +34,10 @@ class Modelo_persona extends CI_Model {
                 AND NOT EXISTS (SELECT NULL FROM usuario WHERE codPersona=p.CodPersona )
                 AND DATEDIFF(NOW(), FechaAlta)>$Plazo";
         $this->db->query($sql);
-        return $query->row()->Conteo;
+        $Conteo = $query->row()->Conteo;
+        
+        $this->modelo_auditoria->Insert(0, $sql);
+        return $Conteo;
     }
 }
 

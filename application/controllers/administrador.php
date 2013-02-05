@@ -5,10 +5,6 @@ class Administrador extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-
-        $this->load->database();
-        $this->load->helper('url');
-
         $this->load->library('grocery_CRUD');
     }
 
@@ -77,6 +73,7 @@ class Administrador extends CI_Controller {
         $output = $crud->render();
         $this->_example_output($output);
     }
+    
     function Universidad() {
         $crud = new grocery_CRUD();
         $crud->set_table('universidad');

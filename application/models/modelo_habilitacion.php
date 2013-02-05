@@ -18,12 +18,16 @@ class Modelo_habilitacion extends CI_Model {
     function Insert($FechaInicio,$FechaFin,$CodCarrera,$DesdeNombre,$HastaNombre) {
         $sql = "INSERT INTO habilitacion (FechaInicio,FechaFin,CodCarrera,DesdeNombre,HastaNombre) VALUES 
 		        ('$FechaInicio','$FechaFin','$CodCarrera','$DesdeNombre','$HastaNombre')";
-        return $this->db->query($sql);
+        $this->db->query($sql);
+        
+        $this->modelo_auditoria->Insert(0, $sql);
     }
 
     function Update($CodHabilitacion,$FechaInicio,$FechaFin,$CodCarrera,$DesdeNombre,$HastaNombre) {
         $sql = "UPDATE habilitacion SET FechaInicio='$FechaInicio',FechaFin='$FechaFin',CodCarrera='$CodCarrera',DesdeNombre='$DesdeNombre',HastaNombre='$HastaNombre' WHERE CodHabilitacion='$CodHabilitacion'";
-        return $this->db->query($sql);
+        $this->db->query($sql);
+        
+        $this->modelo_auditoria->Insert(0, $sql);
     }
 }
 ?>
