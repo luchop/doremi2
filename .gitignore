@@ -1,7 +1,8 @@
 #################
 ## Codeigniter
 #################
-application/config
+application/config/config.php
+config/config.php
 
 ############
 ## Windows
